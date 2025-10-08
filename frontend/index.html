@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Checker - Your Personal Health Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Dark Mode Toggle -->
+        <button id="dark-mode-toggle" class="dark-mode-toggle">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon">🌙</span>
+        </button>
+
+        <!-- Sidebar for previous assessments -->
+        <div id="sidebar" class="sidebar hidden">
+            <div class="sidebar-header">
+                <h2>Previous Assessments</h2>
+                <button id="close-sidebar" class="close-btn">&times;</button>
+            </div>
+            <div id="assessment-history" class="assessment-history">
+                <!-- Previous assessments will be displayed here -->
+                <p class="no-history">No previous assessments</p>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div id="main-content">
+            <div id="welcome-screen" class="screen">
+                <header class="header">
+                    <h1>HEALTH CHECKER</h1>
+                    <p>Your Personal Health Assistant</p>
+                </header>
+                
+                <main class="content">
+                    <div class="modern-card">
+                        <div class="features">
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Identify your potential health condition</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Provide specific medication recommendations</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Suggest home remedies and self-care tips</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Tell you when professional care is needed</p>
+                            </div>
+                            <!-- New features -->
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Daily health tips for better wellness</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Find nearest hospitals and clinics</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Save and review your previous assessments</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">+</span>
+                                <p>Modern dark/light mode toggle</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card how-it-works">
+                        <h2>HOW IT WORKS:</h2>
+                        <ol>
+                            <li>Answer simple YES/NO questions about your symptoms</li>
+                            <li>Get a detailed diagnosis with treatment options</li>
+                            <li>Follow the recommendations or seek professional help</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- Daily Health Tip Section -->
+                    <div class="modern-card daily-tip">
+                        <h3>DAILY HEALTH TIP:</h3>
+                        <p id="health-tip">Loading health tip...</p>
+                    </div>
+                    
+                    <div class="modern-card disclaimer">
+                        <h3>⚠️ IMPORTANT DISCLAIMER:</h3>
+                        <p>This tool provides <strong>general guidance</strong> based on common conditions.<br>
+                        It is <strong>NOT</strong> a replacement for professional medical advice.<br>
+                        <span class="emergency">If experiencing emergency symptoms, call 112 immediately!</span></p>
+                    </div>
+                </main>
+                
+                <footer class="footer">
+                    <button id="start-btn" class="btn btn-primary">
+                        <i class="fas fa-stethoscope"></i> Begin Assessment
+                    </button>
+                    <button id="toggle-sidebar" class="btn btn-secondary">
+                        <i class="fas fa-history"></i> View History
+                    </button>
+                </footer>
+            </div>
+            
+            <div id="assessment-screen" class="screen hidden">
+                <div id="progress-container">
+                    <div id="progress-bar">
+                        <div id="progress-fill"></div>
+                    </div>
+                    <div id="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
+                </div>
+                
+                <div id="question-container">
+                    <div class="question-card">
+                        <h2>QUESTION:</h2>
+                        <p id="question-text">Are you experiencing severe chest pain, difficulty breathing, or loss of consciousness?</p>
+                        <div class="answer-buttons">
+                            <button id="yes-btn" class="btn-answer yes">
+                                <i class="fas fa-check"></i> Yes
+                            </button>
+                            <button id="no-btn" class="btn-answer no">
+                                <i class="fas fa-times"></i> No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="diagnosis-screen" class="screen hidden">
+                <div class="diagnosis-header">
+                    <h1 id="diagnosis-title">POTENTIAL MEDICAL EMERGENCY</h1>
+                    <div id="severity-badge" class="severity emergency">[!!!] EMERGENCY</div>
+                </div>
+                
+                <div class="diagnosis-content">
+                    <div class="section">
+                        <h3>SEVERITY LEVEL:</h3>
+                        <p id="severity-level">EMERGENCY</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>WHAT IS THIS?</h3>
+                        <p id="description">You may be experiencing a life-threatening condition such as heart attack, stroke, or severe allergic reaction.</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>HOME REMEDIES & SELF-CARE:</h3>
+                        <p id="remedies">DO NOT WAIT - Take immediate action</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>RECOMMENDED MEDICATIONS:</h3>
+                        <p id="medications">Call emergency services (112) immediately</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>WHEN TO SEE A DOCTOR:</h3>
+                        <p id="when-to-see">RIGHT NOW - This is an emergency</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>PREVENTION TIPS:</h3>
+                        <p id="prevention">Regular health checkups, manage chronic conditions, know warning signs</p>
+                    </div>
+                    
+                    <!-- Nearest Hospitals Section -->
+                    <div class="section">
+                        <h3>NEAREST HOSPITALS & CLINICS:</h3>
+                        <div id="map-container">
+                            <div id="map"></div>
+                            <div id="hospital-list">
+                                <p>Click "Find Nearby Hospitals" to locate medical facilities</p>
+                                <button id="find-hospitals" class="btn btn-secondary">
+                                    <i class="fas fa-map-marker-alt"></i> Find Nearby Hospitals
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card disclaimer-section">
+                        <h3>⚠️ IMPORTANT DISCLAIMER:</h3>
+                        <p>This is for informational purposes only and not a substitute for professional medical advice. Always consult a healthcare provider for proper diagnosis and treatment.</p>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button id="restart-btn" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Check Another Condition
+                    </button>
+                    <button id="save-assessment" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Assessment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
