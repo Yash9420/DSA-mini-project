@@ -6,13 +6,13 @@
 
 #define MAX_TEXT 512
 
-// Node types
+
 typedef enum {
     QUESTION_NODE,
     DIAGNOSIS_NODE
 } NodeType;
 
-// Severity levels
+
 typedef enum {
     EMERGENCY,
     URGENT,
@@ -20,7 +20,7 @@ typedef enum {
     MILD
 } Severity;
 
-// Diagnosis structure
+
 typedef struct {
     char condition[MAX_TEXT];
     Severity severity;
@@ -31,7 +31,7 @@ typedef struct {
     char prevention[MAX_TEXT];
 } Diagnosis;
 
-// Tree node structure
+
 typedef struct TreeNode {
     NodeType type;
     char text[MAX_TEXT];
@@ -40,7 +40,7 @@ typedef struct TreeNode {
     Diagnosis *diagnosis;
 } TreeNode;
 
-// Function prototypes
+
 void enableANSI();
 void sleepMs(int milliseconds);
 void printSeparator(char c, int length);
@@ -60,7 +60,7 @@ void displayDiagnosis(Diagnosis* diag);
 void traverseTree(TreeNode* root);
 void freeTree(TreeNode* root);
 
-// Enable ANSI escape codes on Windows
+
 void enableANSI() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
@@ -69,19 +69,19 @@ void enableANSI() {
     SetConsoleMode(hOut, dwMode);
 }
 
-// Sleep function
+
 void sleepMs(int milliseconds) {
     Sleep(milliseconds);
 }
 
-// Print separator line
+
 void printSeparator(char c, int length) {
     for (int i = 0; i < length; i++) {
         printf("%c", c);
     }
 }
 
-// Display header with color
+
 void displayHeader(const char* title, const char* color) {
     int length = 70;
     int title_len = strlen(title);
@@ -98,7 +98,7 @@ void displayHeader(const char* title, const char* color) {
     printf("\033[0m\n");
 }
 
-// Display animated progress
+
 void displayProgress(const char* message) {
     printf("\n\n  \033[36m%s\033[0m", message);
     for (int i = 0; i < 3; i++) {
@@ -110,20 +110,20 @@ void displayProgress(const char* message) {
     sleepMs(500);
 }
 
-// Clear input buffer
+
 void clearInputBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-// Get and validate user response
+
 char getUserResponse() {
     char input[10];
     char response;
     
     while (1) {
         if (fgets(input, sizeof(input), stdin) != NULL) {
-            // Remove newline if present
+            
             input[strcspn(input, "\n")] = 0;
             
             if (strlen(input) > 0) {
@@ -139,7 +139,7 @@ char getUserResponse() {
     }
 }
 
-// Display welcome message
+
 void displayWelcome() {
     printf("\n");
     printf("\033[1m\033[36m");
@@ -173,7 +173,7 @@ void displayWelcome() {
     printSeparator('=', 70);
 }
 
-// Create a new tree node
+
 TreeNode* createNode(NodeType type, const char* text) {
     TreeNode* node = (TreeNode*)malloc(sizeof(TreeNode));
     if (node == NULL) {
@@ -191,7 +191,7 @@ TreeNode* createNode(NodeType type, const char* text) {
     return node;
 }
 
-// Create a diagnosis
+
 Diagnosis* createDiagnosis(const char* condition, Severity severity,
                           const char* description, const char* remedies,
                           const char* medications, const char* when_to_see,
@@ -219,7 +219,7 @@ Diagnosis* createDiagnosis(const char* condition, Severity severity,
     return diag;
 }
 
-// Create diagnosis node
+
 TreeNode* createDiagnosisNode(Diagnosis* diag) {
     TreeNode* node = (TreeNode*)malloc(sizeof(TreeNode));
     if (node == NULL) {
@@ -236,13 +236,13 @@ TreeNode* createDiagnosisNode(Diagnosis* diag) {
     return node;
 }
 
-// Display comprehensive diagnosis
+
 void displayDiagnosis(Diagnosis* diag) {
     const char* severity_color;
     const char* severity_text;
     const char* severity_icon;
     
-    // Set color and text based on severity
+    
     switch(diag->severity) {
         case EMERGENCY:
             severity_color = "\033[31m";
@@ -270,7 +270,7 @@ void displayDiagnosis(Diagnosis* diag) {
             severity_icon = "[?]";
     }
     
-    // Display diagnosis header
+    
     printf("\n");
     printf("\033[1m%s", severity_color);
     printSeparator('=', 70);
@@ -279,30 +279,30 @@ void displayDiagnosis(Diagnosis* diag) {
     printSeparator('=', 70);
     printf("\033[0m\n");
     
-    // Severity indicator
+    
     printf("\n\033[1m%s  SEVERITY LEVEL: %s\033[0m\n", severity_color, severity_text);
     
-    // Description
+    
     printf("\n\033[1m\033[34m  WHAT IS THIS?\033[0m\n");
     printf("  %s\n", diag->description);
     
-    // Home remedies
+    
     printf("\n\033[1m\033[32m  HOME REMEDIES & SELF-CARE:\033[0m\n");
     printf("  %s\n", diag->remedies);
     
-    // Medications
+    
     printf("\n\033[1m\033[35m  RECOMMENDED MEDICATIONS:\033[0m\n");
     printf("  %s\n", diag->medications);
     
-    // When to see doctor
+    
     printf("\n\033[1m\033[33m  WHEN TO SEE A DOCTOR:\033[0m\n");
     printf("  %s\n", diag->when_to_see_doctor);
     
-    // Prevention
+    
     printf("\n\033[1m\033[36m  PREVENTION TIPS:\033[0m\n");
     printf("  %s\n", diag->prevention);
     
-    // Important disclaimer
+    
     printf("\n");
     printSeparator('=', 70);
     printf("\n\033[1m\033[31m  IMPORTANT DISCLAIMER:\033[0m\n");
@@ -313,13 +313,13 @@ void displayDiagnosis(Diagnosis* diag) {
     printf("\n");
 }
 
-// Build the comprehensive symptom decision tree
+
 TreeNode* buildSymptomTree() {
-    // Root question
+    
     TreeNode* root = createNode(QUESTION_NODE, 
         "Are you experiencing severe chest pain, difficulty breathing, or loss of consciousness?");
     
-    // EMERGENCY CONDITIONS
+    
     Diagnosis* emergency = createDiagnosis(
         "POTENTIAL MEDICAL EMERGENCY",
         EMERGENCY,
@@ -331,17 +331,17 @@ TreeNode* buildSymptomTree() {
     );
     root->yes_branch = createDiagnosisNode(emergency);
     
-    // Continue with less severe symptoms
+    
     TreeNode* q2 = createNode(QUESTION_NODE, 
         "Do you have a fever (temperature above 38C)?");
     root->no_branch = q2;
     
-    // FEVER PATH
+    
     TreeNode* q3 = createNode(QUESTION_NODE, 
         "Is your fever accompanied by severe headache, stiff neck, or sensitivity to light?");
     q2->yes_branch = q3;
     
-    // Possible Meningitis
+    
     Diagnosis* meningitis = createDiagnosis(
         "POSSIBLE MENINGITIS OR SERIOUS INFECTION",
         URGENT,
@@ -361,7 +361,7 @@ TreeNode* buildSymptomTree() {
         "Do you also have body aches, fatigue, and cough?");
     q4->yes_branch = q5;
     
-    // Influenza (Flu)
+    
     Diagnosis* flu = createDiagnosis(
         "INFLUENZA (FLU)",
         MODERATE,
@@ -373,7 +373,7 @@ TreeNode* buildSymptomTree() {
     );
     q5->yes_branch = createDiagnosisNode(flu);
     
-    // Bacterial Infection
+    
     Diagnosis* bacterial = createDiagnosis(
         "POSSIBLE BACTERIAL INFECTION",
         URGENT,
@@ -385,7 +385,7 @@ TreeNode* buildSymptomTree() {
     );
     q5->no_branch = createDiagnosisNode(bacterial);
     
-    // Short-term fever
+    
     Diagnosis* viral = createDiagnosis(
         "COMMON VIRAL INFECTION",
         MILD,
@@ -397,7 +397,7 @@ TreeNode* buildSymptomTree() {
     );
     q4->no_branch = createDiagnosisNode(viral);
     
-    // NO FEVER PATH
+    
     TreeNode* q6 = createNode(QUESTION_NODE, 
         "Are you experiencing persistent cough or congestion?");
     q2->no_branch = q6;
@@ -406,7 +406,7 @@ TreeNode* buildSymptomTree() {
         "Do you have thick yellow/green mucus or cough lasting more than 10 days?");
     q6->yes_branch = q7;
     
-    // Sinus Infection
+    
     Diagnosis* sinusitis = createDiagnosis(
         "SINUSITIS (SINUS INFECTION)",
         MODERATE,
@@ -422,7 +422,7 @@ TreeNode* buildSymptomTree() {
         "Do you have runny nose, sneezing, and itchy/watery eyes?");
     q7->no_branch = q8;
     
-    // Allergies
+    
     Diagnosis* allergies = createDiagnosis(
         "ALLERGIC RHINITIS (ALLERGIES)",
         MILD,
@@ -434,7 +434,7 @@ TreeNode* buildSymptomTree() {
     );
     q8->yes_branch = createDiagnosisNode(allergies);
     
-    // Common Cold
+    
     Diagnosis* cold = createDiagnosis(
         "COMMON COLD",
         MILD,
@@ -446,7 +446,7 @@ TreeNode* buildSymptomTree() {
     );
     q8->no_branch = createDiagnosisNode(cold);
     
-    // NO RESPIRATORY SYMPTOMS
+    
     TreeNode* q9 = createNode(QUESTION_NODE, 
         "Are you experiencing stomach pain, nausea, or digestive issues?");
     q6->no_branch = q9;
@@ -459,7 +459,7 @@ TreeNode* buildSymptomTree() {
         "Have symptoms lasted more than 48 hours or do you have signs of dehydration (dark urine, dizziness)?");
     q10->yes_branch = q11;
     
-    // Severe Gastroenteritis
+    
     Diagnosis* severe_gi = createDiagnosis(
         "SEVERE GASTROENTERITIS (STOMACH FLU)",
         URGENT,
@@ -471,7 +471,7 @@ TreeNode* buildSymptomTree() {
     );
     q11->yes_branch = createDiagnosisNode(severe_gi);
     
-    // Mild Gastroenteritis
+    
     Diagnosis* gastro = createDiagnosis(
         "VIRAL GASTROENTERITIS (STOMACH BUG)",
         MILD,
@@ -487,7 +487,7 @@ TreeNode* buildSymptomTree() {
         "Do you have heartburn or burning sensation in chest/throat?");
     q10->no_branch = q12;
     
-    // Acid Reflux/GERD
+    
     Diagnosis* gerd = createDiagnosis(
         "ACID REFLUX / GERD (GASTROESOPHAGEAL REFLUX DISEASE)",
         MILD,
@@ -499,7 +499,7 @@ TreeNode* buildSymptomTree() {
     );
     q12->yes_branch = createDiagnosisNode(gerd);
     
-    // Indigestion
+    
     Diagnosis* indigestion = createDiagnosis(
         "INDIGESTION (DYSPEPSIA)",
         MILD,
@@ -511,7 +511,7 @@ TreeNode* buildSymptomTree() {
     );
     q12->no_branch = createDiagnosisNode(indigestion);
     
-    // NO DIGESTIVE ISSUES
+    
     TreeNode* q13 = createNode(QUESTION_NODE, 
         "Are you experiencing headache?");
     q9->no_branch = q13;
@@ -520,7 +520,7 @@ TreeNode* buildSymptomTree() {
         "Is it a severe, sudden headache (worst of your life) or accompanied by vision changes?");
     q13->yes_branch = q14;
     
-    // Severe Headache - Emergency
+    
     Diagnosis* severe_headache = createDiagnosis(
         "POSSIBLE SERIOUS HEADACHE CONDITION",
         EMERGENCY,
@@ -536,7 +536,7 @@ TreeNode* buildSymptomTree() {
         "Is it a throbbing headache on one side, possibly with nausea or light sensitivity?");
     q14->no_branch = q15;
     
-    // Migraine
+    
     Diagnosis* migraine = createDiagnosis(
         "MIGRAINE HEADACHE",
         MODERATE,
@@ -548,7 +548,7 @@ TreeNode* buildSymptomTree() {
     );
     q15->yes_branch = createDiagnosisNode(migraine);
     
-    // Tension Headache
+    
     Diagnosis* tension = createDiagnosis(
         "TENSION HEADACHE",
         MILD,
@@ -560,7 +560,7 @@ TreeNode* buildSymptomTree() {
     );
     q15->no_branch = createDiagnosisNode(tension);
     
-    // NO HEADACHE
+    
     TreeNode* q16 = createNode(QUESTION_NODE, 
         "Are you experiencing muscle or joint pain?");
     q13->no_branch = q16;
@@ -569,7 +569,7 @@ TreeNode* buildSymptomTree() {
         "Is the pain related to a recent injury or overuse?");
     q16->yes_branch = q17;
     
-    // Muscle Strain/Sprain
+    
     Diagnosis* strain = createDiagnosis(
         "MUSCLE STRAIN OR SPRAIN",
         MILD,
@@ -581,7 +581,7 @@ TreeNode* buildSymptomTree() {
     );
     q17->yes_branch = createDiagnosisNode(strain);
     
-    // General body aches
+    
     Diagnosis* body_aches = createDiagnosis(
         "GENERAL BODY ACHES (MYALGIA)",
         MILD,
@@ -593,12 +593,12 @@ TreeNode* buildSymptomTree() {
     );
     q17->no_branch = createDiagnosisNode(body_aches);
     
-    // NO PAIN
+    
     TreeNode* q18 = createNode(QUESTION_NODE, 
         "Are you experiencing fatigue, weakness, or low energy?");
     q16->no_branch = q18;
     
-    // Fatigue
+    
     Diagnosis* fatigue = createDiagnosis(
         "GENERAL FATIGUE",
         MILD,
@@ -610,7 +610,7 @@ TreeNode* buildSymptomTree() {
     );
     q18->yes_branch = createDiagnosisNode(fatigue);
     
-    // Generally well
+    
     Diagnosis* general_wellness = createDiagnosis(
         "GENERAL WELLNESS CHECK",
         MILD,
@@ -625,21 +625,21 @@ TreeNode* buildSymptomTree() {
     return root;
 }
 
-// Traverse the tree based on user input
+
 void traverseTree(TreeNode* root) {
     if (root == NULL) {
         return;
     }
     
     if (root->type == DIAGNOSIS_NODE) {
-        // Display diagnosis
+        
         displayProgress("Analyzing your symptoms");
         system("cls");
         displayDiagnosis(root->diagnosis);
         return;
     }
     
-    // Question node - ask question and traverse based on answer
+    
     printf("\n");
     printSeparator('-', 70);
     printf("\n\033[1m\033[36m  QUESTION:\033[0m %s\n", root->text);
@@ -655,7 +655,7 @@ void traverseTree(TreeNode* root) {
     }
 }
 
-// Free the entire tree
+
 void freeTree(TreeNode* root) {
     if (root == NULL) {
         return;
@@ -674,7 +674,7 @@ int main() {
     TreeNode* root;
     char choice;
     
-    // Enable ANSI colors on Windows
+    
     enableANSI();
     
     do {
@@ -687,16 +687,16 @@ int main() {
         system("cls");
         displayProgress("Initializing symptom checker");
         
-        // Build the symptom tree
+        
         root = buildSymptomTree();
         
-        // Start the assessment
+        
         traverseTree(root);
         
-        // Free memory
+        
         freeTree(root);
         
-        // Ask if user wants to perform another assessment
+        
         printf("\n\n");
         printSeparator('=', 70);
         printf("\n\033[1m\033[36mWould you like to check another condition? (Y/N): \033[0m");
